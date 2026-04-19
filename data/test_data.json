@@ -1,0 +1,36 @@
+{
+  "orange_hrm": {
+    "url": "https://opensource-demo.orangehrmlive.com/",
+    "admin_user": {
+      "username": "Admin",
+      "password": ""
+    }
+  },
+  "sauce_demo": {
+    "url": "https://www.saucedemo.com/",
+    "valid_users": [
+      "standard_user",
+      "problem_user",
+      "performance_glitch_user",
+      "error_user",
+      "visual_user"
+    ],
+    "invalid_users": [
+      { "username": "locked_out_user", "password": "secret_sauce", "error": "locked out" },
+      { "username": "wrong_user", "password": "wrong_password", "error": "do not match" }
+    ],
+    "common_password": "",
+    "inventory_data": {
+      "products": [
+        { "name": "Sauce Labs Backpack", "price": 29.99 },
+        { "name": "Sauce Labs Bike Light", "price": 9.99 }
+      ],
+      "sort_options": ["az", "za", "lohi", "hilo"]
+    },
+    "customer_info": {
+      "first_name": "Kaivalya",
+      "last_name": "Patil",
+      "postal_code": "12345"
+    }
+  }
+}

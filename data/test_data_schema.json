@@ -1,0 +1,31 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "sauce_demo": {
+      "type": "object",
+      "properties": {
+        "url": { "type": "string", "format": "uri" },
+        "common_password": { "type": "string" },
+        "inventory_data": {
+          "type": "object",
+          "properties": {
+            "products": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "name": { "type": "string" },
+                  "price": { "type": "number" }
+                },
+                "required": ["name", "price"]
+              }
+            }
+          }
+        }
+      },
+      "required": ["url", "common_password", "inventory_data"]
+    }
+  },
+  "required": ["sauce_demo"]
+}
