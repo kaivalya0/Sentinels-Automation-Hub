@@ -25,7 +25,11 @@ jobs:
         run: playwright install --with-deps chromium
 
       - name: Run Tests
-        # Ensure your pytest.ini is configured to point to your tests
+        env:
+          ORANGE_ADMIN_USER: ${{ secrets.ORANGE_ADMIN_USER }}
+          ORANGE_ADMIN_PASS: ${{ secrets.ORANGE_ADMIN_PASS }}
+          SAUCE_USER: ${{ secrets.SAUCE_USER }}
+          SAUCE_PASS: ${{ secrets.SAUCE_PASS }}
         run: pytest --alluredir=allure-results
 
       - name: Upload Results
