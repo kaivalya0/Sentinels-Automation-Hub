@@ -1,0 +1,2 @@
+
+✅ Security: Session successfully destroyed after logout.

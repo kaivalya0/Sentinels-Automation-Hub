@@ -1,0 +1,2 @@
+
+✅ Negative test passed for: locked_out_user
