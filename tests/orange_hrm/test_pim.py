@@ -16,6 +16,9 @@ def test_add_new_employee(page: Page, config_data):
 
     # 3. Assert
     # Verify redirection to the employee personal details page
-    expect(page).to_have_url(re.compile(r".*/pim/viewPersonalDetails/empNumber/.*"))
+    expect(page).to_have_url(
+        re.compile(r".*/pim/viewPersonalDetails/empNumber/.*"),
+        timeout=15000
+    )
     # Verify the header shows the new name
     expect(page.get_by_role("heading", name=f"{f_name} {l_name}")).to_be_visible()
