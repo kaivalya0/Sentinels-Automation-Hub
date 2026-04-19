@@ -5,6 +5,10 @@ on:
   pull_request:
     branches: [ main ]
 
+# Required to allow the runner to write the report to the gh-pages branch
+permissions:
+  contents: write
+
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -32,7 +36,23 @@ jobs:
           SAUCE_PASS: ${{ secrets.SAUCE_PASS }}
         run: pytest --alluredir=allure-results
 
-      - name: Upload Results
+      - name: Generate Allure Report
+        uses: simple-elf/allure-report-action@master
+        if: always() # Ensures report is generated even if tests fail
+        with:
+          allure_results: allure-results
+          allure_history: allure-history
+          keep_reports: 20
+
+      - name: Deploy Report to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        if: always()
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: allure-history
+          publish_branch: gh-pages
+
+      - name: Upload Raw Artifacts
         uses: actions/upload-artifact@v4
         if: always()
         with:
