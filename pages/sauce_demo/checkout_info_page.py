@@ -3,7 +3,7 @@ from pages.base_page import BasePage
 class CheckoutInfoPage(BasePage):
     def __init__(self, page):
         super().__init__(page)
-        # ✅ Professional Locators: Using data-test attributes for 100% stability
+        #  Professional Locators: Using data-test attributes for 100% stability
         self.first_name_field = page.locator("[data-test='firstName']")
         self.last_name_field = page.locator("[data-test='lastName']")
         self.postal_code_field = page.locator("[data-test='postalCode']")

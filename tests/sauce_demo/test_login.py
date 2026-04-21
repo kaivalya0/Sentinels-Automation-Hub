@@ -1,7 +1,8 @@
-import pytest  # ✅ We need this now for the @pytest.mark.parametrize decorator
+import pytest
 from pages.sauce_demo.login_page import SauceLoginPage
 
-
+@pytest.mark.smoke
+@pytest.mark.ui
 @pytest.mark.parametrize("user_index", [0, 1, 2])  # This will run the test 3 times
 def test_valid_logins(page, config_data, user_index):
     login_page = SauceLoginPage(page)
@@ -19,10 +20,12 @@ def test_valid_logins(page, config_data, user_index):
 
     # 4. Assert
     assert "inventory.html" in page.url
-    print(f"\n✅ Login successful for user: {username}")
+    print(f"\n Login successful for user: {username}")
 
 
 # This handles the list of 'invalid_users' from your JSON
+@pytest.mark.regression
+@pytest.mark.ui
 @pytest.mark.parametrize("invalid_index", [0, 1])
 def test_invalid_logins(page, config_data, invalid_index):
     login_page = SauceLoginPage(page)
@@ -40,4 +43,4 @@ def test_invalid_logins(page, config_data, invalid_index):
     # Assert: Verify the error message contains the expected text from JSON
     actual_error = login_page.error_message.inner_text().lower()
     assert expected_error in actual_error
-    print(f"\n✅ Negative test passed for: {username}")
+    print(f"\n  Negative test passed for: {username}")

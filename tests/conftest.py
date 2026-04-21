@@ -2,6 +2,7 @@ import pytest
 import json
 import os
 import time
+import allure
 from pathlib import Path
 from filelock import FileLock
 from dotenv import load_dotenv
@@ -10,7 +11,7 @@ from dotenv import load_dotenv
 ROOT_DIR = Path(__file__).parent.parent
 DATA_DIR = ROOT_DIR / "data"
 
-# ✅ Only one load_dotenv is needed if the path is explicit
+# Load environment variables from .env
 load_dotenv(dotenv_path=ROOT_DIR / ".env")
 
 AUTH_FILES = {
@@ -20,6 +21,7 @@ AUTH_FILES = {
 
 SESSION_TIMEOUT = 86400
 
+
 @pytest.fixture(scope="session")
 def config_data():
     """Stitches JSON data with .env secrets."""
@@ -28,10 +30,13 @@ def config_data():
         data = json.load(f)
 
     # Secret Overrides
-    data["orange_hrm"]["admin_user"]["username"] = os.getenv("ORANGE_ADMIN_USER", data["orange_hrm"]["admin_user"]["username"])
-    data["orange_hrm"]["admin_user"]["password"] = os.getenv("ORANGE_ADMIN_PASS", data["orange_hrm"]["admin_user"]["password"])
+    data["orange_hrm"]["admin_user"]["username"] = os.getenv("ORANGE_ADMIN_USER",
+                                                             data["orange_hrm"]["admin_user"]["username"])
+    data["orange_hrm"]["admin_user"]["password"] = os.getenv("ORANGE_ADMIN_PASS",
+                                                             data["orange_hrm"]["admin_user"]["password"])
     data["sauce_demo"]["common_password"] = os.getenv("SAUCE_PASS", data["sauce_demo"]["common_password"])
     return data
+
 
 @pytest.fixture(scope="function")
 def browser_context_args(browser_type, config_data, tmp_path_factory, request):
@@ -50,7 +55,10 @@ def browser_context_args(browser_type, config_data, tmp_path_factory, request):
 
     if "test_login" in nodeid:
         return {}
+
+    # ✅ Optimized context: Returns storage state
     return {"storage_state": str(auth_file)}
+
 
 def _generate_session(browser_type, config, app_name, target_path):
     browser = browser_type.launch(headless=True)
@@ -69,24 +77,32 @@ def _generate_session(browser_type, config, app_name, target_path):
         page.get_by_placeholder("Username").fill(data["admin_user"]["username"])
         page.get_by_placeholder("Password").fill(data["admin_user"]["password"])
         page.get_by_role("button", name="Login").click()
-        # ✅ Ensure login finishes before saving state
         page.get_by_role("heading", name="Dashboard").wait_for(state="visible", timeout=15000)
 
     context.storage_state(path=str(target_path))
     browser.close()
 
+
 @pytest.hookimpl(hookwrapper=True)
 def pytest_runtest_makereport(item, call):
+    """
+    Hook to capture screenshots and attach to Allure on failure.
+    Battle-tested: Attaches directly to the report.
+    """
     outcome = yield
     report = outcome.get_result()
+
+    # We only care about failures during the 'call' phase
     if report.when == "call" and report.failed:
         page = item.funcargs.get("page")
         if page:
+            # 1. 📸 Capture Screenshot directly to memory for Allure
+            allure.attach(
+                page.screenshot(full_page=True),
+                name=f"FAILED_{item.name}",
+                attachment_type=allure.attachment_type.PNG
+            )
+
+            # 2. 📝 Optional: Local file save for debugging (if needed)
             Path("reports/screenshots").mkdir(parents=True, exist_ok=True)
-            file_name = f"reports/screenshots/{item.name}.png"
-            page.screenshot(path=file_name)
-            try:
-                import allure
-                allure.attach.file(file_name, attachment_type=allure.attachment_type.PNG)
-            except ImportError:
-                pass
+            page.screenshot(path=f"reports/screenshots/{item.name}.png")

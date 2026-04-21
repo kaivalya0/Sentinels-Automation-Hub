@@ -2,7 +2,8 @@ import pytest
 from pages.sauce_demo.inventory_page import InventoryPage
 from playwright.sync_api import expect
 
-
+@pytest.mark.smoke
+@pytest.mark.ui
 def test_verify_inventory_access(page, config_data):
     """Verifies that we can access inventory via stored session."""
     inventory = InventoryPage(page)

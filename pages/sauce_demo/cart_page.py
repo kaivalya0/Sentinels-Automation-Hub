@@ -3,7 +3,7 @@ from pages.base_page import BasePage
 class CartPage(BasePage):
     def __init__(self, page):
         super().__init__(page)
-        # ✅ Standardized locators
+        #  Standardized locators
         self.header_title = page.locator("[data-test='title']")
         self.cart_item = page.locator("[data-test='inventory-item']")
         self.item_name = page.locator("[data-test='inventory-item-name']")

@@ -1,7 +1,10 @@
 import re
+import pytest
 from playwright.sync_api import Page, expect
 from pages.orange_hrm.pim_page import OrangePIMPage
 
+@pytest.mark.smoke
+@pytest.mark.ui
 def test_add_new_employee(page: Page, config_data):
     # 1. Arrange - Setup POM and pull dynamic data
     pim = OrangePIMPage(page)

@@ -3,7 +3,7 @@ from pages.base_page import BasePage
 class CheckoutOverviewPage(BasePage):
     def __init__(self, page):
         super().__init__(page)
-        # ✅ Professional Locators
+        # Professional Locators
         self.btn_finish = page.locator("[data-test='finish']")
         self.btn_cancel = page.locator("[data-test='cancel']")
         self.item_total_label = page.locator("[data-test='subtotal-label']")

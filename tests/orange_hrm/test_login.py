@@ -3,7 +3,8 @@ import re  # ✅ ADD THIS LINE
 from playwright.sync_api import Page, expect
 from pages.orange_hrm.login_page import OrangeLoginPage
 
-
+@pytest.mark.smoke
+@pytest.mark.ui
 def test_login_successful(page: Page, config_data):
     """
     Validates the standard login flow for OrangeHRM.
@@ -27,7 +28,8 @@ def test_login_successful(page: Page, config_data):
     # (Assuming you added a dashboard check to your Page Object)
     expect(page.get_by_role("heading", name="Dashboard")).to_be_visible()
 
-
+@pytest.mark.regression
+@pytest.mark.ui
 def test_login_invalid_credentials(page: Page, config_data):
     """Checks the UI reaction to bad credentials."""
     # 1. Arrange

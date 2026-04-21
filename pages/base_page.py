@@ -1,6 +1,6 @@
 class BasePage:
     def __init__(self, page):
-        # ✅ We store the page object so all methods can use it via 'self'
+        # We store the page object so all methods can use it via 'self'
         self.page = page
 
     def navigate(self, url: str):
@@ -9,7 +9,7 @@ class BasePage:
 
     def click_element(self, locator):
         """Wait for element and click."""
-        # ✅ Now 'self' is technically involved in the scope of the method call
+        #  Now 'self' is technically involved in the scope of the method call
         locator.click()
 
     def type_text(self, locator, text: str):

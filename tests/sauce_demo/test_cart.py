@@ -1,9 +1,10 @@
-
+import pytest
 from pages.sauce_demo.inventory_page import InventoryPage
 from pages.sauce_demo.cart_page import CartPage
 from playwright.sync_api import expect
 
-
+@pytest.mark.smoke
+@pytest.mark.ui
 def test_add_to_cart_and_verify(page, config_data):
     inventory = InventoryPage(page)
     cart = CartPage(page)
@@ -22,4 +23,4 @@ def test_add_to_cart_and_verify(page, config_data):
     assert details["name"] == product_to_add
     expect(cart.cart_item).to_have_count(1)
 
-    print(f"\n✅ Cart verified: {details['name']} is present at {details['price']}")
+    print(f"\n Cart verified: {details['name']} is present at {details['price']}")

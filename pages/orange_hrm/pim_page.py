@@ -10,11 +10,11 @@ class OrangePIMPage(BasePage):
         # Add Employee Form
         self.first_name_input = page.get_by_placeholder("First Name")
         self.last_name_input = page.get_by_placeholder("Last Name")
-        # ✅ FIXED: Changed "SAVE" to "Save" and added exact=False
+        # FIXED: Changed "SAVE" to "Save" and added exact=False
         self.save_button = page.get_by_role("button", name="Save", exact=False)
 
         # Employee List / Search
-        # ✅ FIXED: Corrected placeholder typo "foe" -> "for"
+        # FIXED: Corrected placeholder typo "foe" -> "for"
         self.employee_name_search = page.get_by_placeholder("Type for hints...").first
         self.search_button = page.get_by_role("button", name="Search")
         self.first_row_name = page.locator(".oxd-table-card").first
@@ -29,5 +29,5 @@ class OrangePIMPage(BasePage):
         self.first_name_input.fill(first_name)
         self.last_name_input.fill(last_name)
         self.save_button.click()
-        # ✅ TIP: wait_for_load_state is okay, but targeted waits are better
+        # wait_for_load_state is okay, but targeted waits are better
         self.page.wait_for_load_state("networkidle")

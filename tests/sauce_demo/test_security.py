@@ -1,7 +1,9 @@
 from pages.sauce_demo.inventory_page import InventoryPage
 from playwright.sync_api import expect
+import pytest
 
-
+@pytest.mark.regression
+@pytest.mark.ui
 def test_logout_security_gate(page, config_data):
     inventory = InventoryPage(page)
     url = config_data["sauce_demo"]["url"]
@@ -15,6 +17,6 @@ def test_logout_security_gate(page, config_data):
     # Assert: Try to go back to inventory directly
     page.goto(url + "inventory.html")
 
-    # ✅ SECURITY GATE: Should be redirected back to login
+    # SECURITY GATE: Should be redirected back to login
     expect(page).to_have_url(url)
-    print("\n✅ Security: Session successfully destroyed after logout.")
+    print("\n Security: Session successfully destroyed after logout.")

@@ -3,9 +3,11 @@ from pages.sauce_demo.cart_page import CartPage
 from pages.sauce_demo.checkout_info_page import CheckoutInfoPage
 from pages.sauce_demo.checkout_overview_page import CheckoutOverviewPage
 from playwright.sync_api import expect
-#import pytest
+import pytest
 
 # 1. THE HAPPY PATH: Full E2E Flow
+@pytest.mark.smoke
+@pytest.mark.ui
 def test_e2e_purchase_flow(page, config_data):
     """Verifies a user can successfully buy an item from start to finish."""
     inventory = InventoryPage(page)
@@ -37,6 +39,8 @@ def test_e2e_purchase_flow(page, config_data):
 
 
 # 2. THE NEGATIVE TEST: Missing Data
+@pytest.mark.regression
+@pytest.mark.ui
 def test_checkout_missing_info_error(page, config_data):
     """Verifies that the system prevents checkout if fields are empty."""
     inventory = InventoryPage(page)
@@ -59,6 +63,8 @@ def test_checkout_missing_info_error(page, config_data):
 
 
 # 3. THE CALCULATED TEST: Price Validation
+@pytest.mark.regression
+@pytest.mark.ui
 def test_checkout_price_math_validation(page, config_data):
     """Verifies that Item Total + Tax exactly equals the final Total."""
     inventory = InventoryPage(page)

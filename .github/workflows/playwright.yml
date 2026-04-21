@@ -5,7 +5,7 @@ on:
   pull_request:
     branches: [ main ]
 
-# Required to allow the runner to write the report to the gh-pages branch
+# Required for GitHub Pages deployment
 permissions:
   contents: write
 
@@ -28,17 +28,19 @@ jobs:
       - name: Install Playwright Browsers
         run: playwright install --with-deps chromium
 
-      - name: Run Tests
+      - name: Run Smoke Tests
+        # ✅ Bridge: Injecting Secrets into the environment
         env:
           ORANGE_ADMIN_USER: ${{ secrets.ORANGE_ADMIN_USER }}
           ORANGE_ADMIN_PASS: ${{ secrets.ORANGE_ADMIN_PASS }}
           SAUCE_USER: ${{ secrets.SAUCE_USER }}
           SAUCE_PASS: ${{ secrets.SAUCE_PASS }}
-        run: pytest --alluredir=allure-results
+        # Runs only tests marked with @pytest.mark.smoke in parallel
+        run: pytest -m smoke -n 3 --alluredir=allure-results
 
       - name: Generate Allure Report
         uses: simple-elf/allure-report-action@master
-        if: always() # Ensures report is generated even if tests fail
+        if: always() # Ensure report is made even if tests fail
         with:
           allure_results: allure-results
           allure_history: allure-history
