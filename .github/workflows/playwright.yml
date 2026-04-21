@@ -5,7 +5,6 @@ on:
   pull_request:
     branches: [ main ]
 
-# Required for GitHub Pages deployment
 permissions:
   contents: write
 
@@ -13,34 +12,47 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - name: Checkout Code
+        uses: actions/checkout@v4
 
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
+          cache: 'pip'
+          cache-dependency-path: 'requirements.txt'
 
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
+      - name: Cache Playwright Browsers
+        uses: actions/cache@v4
+        id: playwright-cache
+        with:
+          path: ~/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright-${{ hashFiles('requirements.txt') }}
+
       - name: Install Playwright Browsers
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
         run: playwright install --with-deps chromium
 
+      - name: Install Playwright System Deps
+        if: steps.playwright-cache.outputs.cache-hit == 'true'
+        run: playwright install-deps chromium
+
       - name: Run Smoke Tests
-        #  Bridge: Injecting Secrets into the environment
         env:
           ORANGE_ADMIN_USER: ${{ secrets.ORANGE_ADMIN_USER }}
           ORANGE_ADMIN_PASS: ${{ secrets.ORANGE_ADMIN_PASS }}
           SAUCE_USER: ${{ secrets.SAUCE_USER }}
           SAUCE_PASS: ${{ secrets.SAUCE_PASS }}
-        # Runs only tests marked with @pytest.mark.smoke in parallel
         run: pytest -m smoke -n 3 --alluredir=allure-results
 
       - name: Generate Allure Report
         uses: simple-elf/allure-report-action@master
-        if: always() # Ensure report is made even if tests fail
+        if: always()
         with:
           allure_results: allure-results
           allure_history: allure-history
@@ -55,7 +67,7 @@ jobs:
           publish_branch: gh-pages
 
       - name: Upload Raw Artifacts
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v4
         if: always()
         with:
           name: allure-results
