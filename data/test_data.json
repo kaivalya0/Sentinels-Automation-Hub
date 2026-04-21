@@ -4,6 +4,10 @@
     "admin_user": {
       "username": "Admin",
       "password": ""
+    },
+    "new_employee": {
+      "first_name": "Automation",
+      "last_name": "Tester"
     }
   },
   "sauce_demo": {

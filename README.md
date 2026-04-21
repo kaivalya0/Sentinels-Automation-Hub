@@ -31,7 +31,7 @@ A professional-grade **Proof of Concept (POC)** for automated end-to-end testing
 ### 2. Installation
 ```bash
 # Clone the repository
-git clone [https://github.com/YOUR_USERNAME/Sentinels-Automation-Hub.git](https://github.com/YOUR_USERNAME/Sentinels-Automation-Hub.git)
+git clone [https://github.com/kaivalya0/Sentinels-Automation-Hub.git](https://github.com/kaivalya0/Sentinels-Automation-Hub.git)
 cd Sentinels-Automation-Hub
 
 # Create and activate virtual environment
