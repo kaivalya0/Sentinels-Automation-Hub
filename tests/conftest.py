@@ -56,7 +56,7 @@ def browser_context_args(browser_type, config_data, tmp_path_factory, request):
     if "test_login" in nodeid:
         return {}
 
-    # ✅ Optimized context: Returns storage state
+    #  Optimized context: Returns storage state
     return {"storage_state": str(auth_file)}
 
 
@@ -96,13 +96,13 @@ def pytest_runtest_makereport(item, call):
     if report.when == "call" and report.failed:
         page = item.funcargs.get("page")
         if page:
-            # 1. 📸 Capture Screenshot directly to memory for Allure
+            # 1.  Capture Screenshot directly to memory for Allure
             allure.attach(
                 page.screenshot(full_page=True),
                 name=f"FAILED_{item.name}",
                 attachment_type=allure.attachment_type.PNG
             )
 
-            # 2. 📝 Optional: Local file save for debugging (if needed)
+            # 2.  Optional: Local file save for debugging (if needed)
             Path("reports/screenshots").mkdir(parents=True, exist_ok=True)
             page.screenshot(path=f"reports/screenshots/{item.name}.png")
