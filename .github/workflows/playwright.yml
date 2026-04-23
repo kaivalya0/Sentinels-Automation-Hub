@@ -1,3 +1,4 @@
+# --- Updated playwright.yml ---
 name: Playwright Tests
 on:
   push:
@@ -56,25 +57,27 @@ jobs:
           SAUCE_PASS: ${{ secrets.SAUCE_PASS }}
         run: pytest -m smoke -n 3 --alluredir=allure-results
 
-      #  NEW: Prepare the Live Preview screenshot (Pick only one to avoid 'v7' failure)
       - name: Prepare Live Preview
         if: failure()
         run: |
           mkdir -p preview
-          # Finds the first PNG in your screenshots folder and copies it to a fixed name
-          find reports/screenshots -name "*.png" | head -n 1 | xargs -I {} cp {} preview/failure-preview.png
+          # FIX: Only run find if the directory was actually created by a test failure
+          if [ -d "reports/screenshots" ]; then
+            find reports/screenshots -name "*.png" | head -n 1 | xargs -I {} cp {} preview/failure-preview.png
+          else
+            echo "No local screenshots found (likely a setup/fixture error)."
+          fi
 
-      #  NEW: Upload Live Preview (Unzipped for instant browser viewing)
       - name: Upload Failure Preview
         if: failure()
+        #  FIX: continue-on-error prevents the job from failing if no preview exists
+        continue-on-error: true
         uses: actions/upload-artifact@v7
         with:
-          # Note: When archive is false, the 'name' parameter is ignored
           path: preview/failure-preview.png
           archive: false
           retention-days: 7
 
-      #  MAINTAINED: Upload full folder for the Report Job (Zipped by default)
       - name: Upload Allure Results
         uses: actions/upload-artifact@v7
         if: always()
@@ -91,20 +94,17 @@ jobs:
     steps:
       - name: Checkout Code
         uses: actions/checkout@v6
-
       - name: Download Allure Results
         uses: actions/download-artifact@v8
         with:
           name: allure-results
           path: allure-results
-
       - name: Generate Allure Report
         uses: simple-elf/allure-report-action@v1.13
         with:
           allure_results: allure-results
           allure_history: allure-history
           keep_reports: 20
-
       - name: Deploy Report to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:
