@@ -1,33 +1,50 @@
+from playwright.sync_api import expect
 from pages.base_page import BasePage
+
 
 class OrangePIMPage(BasePage):
     def __init__(self, page):
         super().__init__(page)
-        # locators: using exact=False to handle extra spaces in OrangeHRM buttons
+        # --- Sidebar & Navigation ---
         self.pim_menu = page.get_by_role("link", name="PIM")
-        self.add_button = page.get_by_role("button", name="Add", exact=False)
 
-        # Add Employee Form
+        # --- Locators for Employee Creation (UI-based) ---
+        self.add_button = page.get_by_role("button", name="Add", exact=False)
         self.first_name_input = page.get_by_placeholder("First Name")
         self.last_name_input = page.get_by_placeholder("Last Name")
-        # FIXED: Changed "SAVE" to "Save" and added exact=False
         self.save_button = page.get_by_role("button", name="Save", exact=False)
 
-        # Employee List / Search
-        # FIXED: Corrected placeholder typo "foe" -> "for"
-        self.employee_name_search = page.get_by_placeholder("Type for hints...").first
+        # --- Locators for Search & Verification ---
+        self.id_search_field = page.locator("div.oxd-input-group:has-text('Employee Id') input")
         self.search_button = page.get_by_role("button", name="Search")
-        self.first_row_name = page.locator(".oxd-table-card").first
+
+    def navigate(self, url: str):
+        """Direct URL navigation ."""
+        self.page.goto(url)
 
     def navigate_to_pim(self):
-        """Navigate to the PIM page module from the sidebar"""
+        """Sidebar-based navigation."""
         self.pim_menu.click()
 
     def add_employee(self, first_name: str, last_name: str):
-        """Standard workflow to create a new employee record."""
+        """
+        Completes the UI form to add an employee.
+        Used by tests/orange_hrm/test_pim.py .
+        """
         self.add_button.click()
         self.first_name_input.fill(first_name)
         self.last_name_input.fill(last_name)
         self.save_button.click()
-        # wait_for_load_state is okay, but targeted waits are better
         self.page.wait_for_load_state("networkidle")
+
+    def search_employee_by_id(self, employee_id: str):
+        """Filters the table by ID ."""
+        self.id_search_field.fill(employee_id)
+        self.search_button.click()
+        self.page.wait_for_load_state("networkidle")
+
+    def verify_employee_data(self, emp_id: str, first_name: str, last_name: str):
+        """Targeted row-level verification ."""
+        target_row = self.page.locator(".oxd-table-card").filter(has_text=emp_id)
+        expect(target_row).to_contain_text(first_name)
+        expect(target_row).to_contain_text(last_name)

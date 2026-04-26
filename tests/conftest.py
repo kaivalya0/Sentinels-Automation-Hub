@@ -79,13 +79,23 @@ def pytest_runtest_makereport(item, call):
             Path("reports/screenshots").mkdir(parents=True, exist_ok=True)
             page.screenshot(path=f"reports/screenshots/{item.name}.png")
 
+
 @pytest.fixture(scope="function")
-def api_client(playwright):
+def api_client(playwright, config_data, request):
     """
-    Creates a dedicated API context.
-    Using 'yield' and 'dispose' ensures no memory leaks in CI [cite: 2026-03-04].
+    Reuses the storage state for API calls.
+    Now the API client is 'logged in' automatically.
     """
-    request_context = playwright.request.new_context()
+    nodeid = request.node.nodeid
+    target_app = "orange_hrm" if "orange_hrm" in nodeid else "sauce_demo"
+    auth_file = AUTH_FILES[target_app]
+
+    # Create context using the same auth file generated in browser_context_args
+    request_context = playwright.request.new_context(
+        base_url=config_data[target_app]["url"],
+        storage_state=str(auth_file) if auth_file.exists() else None
+    )
+
     client = APIClient(request_context)
     yield client
-    request_context.dispose()
+    request_context.dispose()  # Clean up to prevent memory leaks
