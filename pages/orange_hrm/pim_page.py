@@ -29,7 +29,6 @@ class OrangePIMPage(BasePage):
     def add_employee(self, first_name: str, last_name: str):
         """
         Completes the UI form to add an employee.
-        Used by tests/orange_hrm/test_pim.py .
         """
         self.add_button.click()
         self.first_name_input.fill(first_name)

@@ -1,4 +1,4 @@
-# --- Updated playwright.yml ---
+
 name: Playwright Tests
 on:
   push:
@@ -61,7 +61,7 @@ jobs:
         if: failure()
         run: |
           mkdir -p preview
-          # FIX: Only run find if the directory was actually created by a test failure
+          # Only run find if the directory was actually created by a test failure
           if [ -d "reports/screenshots" ]; then
             find reports/screenshots -name "*.png" | head -n 1 | xargs -I {} cp {} preview/failure-preview.png
           else
@@ -70,7 +70,7 @@ jobs:
 
       - name: Upload Failure Preview
         if: failure()
-        #  FIX: continue-on-error prevents the job from failing if no preview exists
+        #   continue-on-error prevents the job from failing if no preview exists
         continue-on-error: true
         uses: actions/upload-artifact@v7
         with:

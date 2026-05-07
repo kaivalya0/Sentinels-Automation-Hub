@@ -9,7 +9,6 @@ class BasePage:
 
     def click_element(self, locator):
         """Wait for element and click."""
-        #  Now 'self' is technically involved in the scope of the method call
         locator.click()
 
     def type_text(self, locator, text: str):

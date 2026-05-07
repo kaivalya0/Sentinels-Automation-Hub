@@ -10,7 +10,7 @@ def test_add_new_employee(page: Page, config_data):
     pim = OrangePIMPage(page)
     url = config_data["orange_hrm"]["url"]
 
-    # ✅ Accessing flattened structure: config_data['orange_hrm']['new_employee']
+    # Accessing flattened structure: config_data['orange_hrm']['new_employee']
     employee_info = config_data["orange_hrm"]["new_employee"]
     f_name = employee_info["first_name"]
     l_name = employee_info["last_name"]

@@ -17,7 +17,6 @@ class InventoryPage(BasePage):
     def add_item_to_cart_by_name(self, item_name: str):
         """
         Finds a specific product card by name and clicks its button.
-        Demonstrates the AAA (Arrange-Act-Assert) pattern.
         """
         # Logic: Isolate the parent container (the card) first
         target_item = self.inventory_item.filter(has_text=item_name)
