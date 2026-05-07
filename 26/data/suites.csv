@@ -1,0 +1,12 @@
+"DESCRIPTION","DURATION IN MS","NAME","PARENT SUITE","START TIME","STATUS","STOP TIME","SUB SUITE","SUITE","TEST CLASS","TEST METHOD"
+"","662","test_add_to_cart_and_verify[chromium]","tests.sauce_demo","Thu May 07 16:56:52 UTC 2026","passed","Thu May 07 16:56:53 UTC 2026","","test_cart","",""
+"","508","test_valid_logins[chromium-1]","tests.sauce_demo","Thu May 07 16:56:53 UTC 2026","passed","Thu May 07 16:56:54 UTC 2026","","test_login","",""
+"Verifies a user can successfully buy an item from start to finish.","852","test_e2e_purchase_flow[chromium]","tests.sauce_demo","Thu May 07 16:56:53 UTC 2026","passed","Thu May 07 16:56:54 UTC 2026","","test_checkout_complete","",""
+"","496","test_valid_logins[chromium-0]","tests.sauce_demo","Thu May 07 16:56:53 UTC 2026","passed","Thu May 07 16:56:53 UTC 2026","","test_login","",""
+"","8576","test_add_new_employee[chromium]","tests.orange_hrm","Thu May 07 16:57:00 UTC 2026","passed","Thu May 07 16:57:09 UTC 2026","","test_pim","",""
+"Verifies that we can access inventory via stored session.","454","test_verify_inventory_access[chromium]","tests.sauce_demo","Thu May 07 16:56:52 UTC 2026","passed","Thu May 07 16:56:52 UTC 2026","","test_inventory","",""
+"
+    Validates the standard login flow for OrangeHRM.
+    Uses 'config_data' fixture from conftest.py.
+    ","4358","test_login_successful[chromium]","tests.orange_hrm","Thu May 07 16:56:56 UTC 2026","passed","Thu May 07 16:57:00 UTC 2026","","test_login","",""
+"","5465","test_valid_logins[chromium-2]","tests.sauce_demo","Thu May 07 16:56:54 UTC 2026","passed","Thu May 07 16:56:59 UTC 2026","","test_login","",""
