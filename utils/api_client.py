@@ -1,7 +1,6 @@
 # utils/api_client.py
 from playwright.sync_api import APIRequestContext
 
-
 class APIClient:
     def __init__(self, request: APIRequestContext):
         """
@@ -21,14 +20,13 @@ class APIClient:
         return self._handle_response(response)
 
     @staticmethod
-    # Removed 'self' and added @staticmethod to satisfy the IDE
     def _handle_response(response):
         """
         Internal utility to validate status and return JSON.
         Prevents 'Silent Failures'—if the API crashes, the test stops.
         """
         if not response.ok:
-            # We raise an exception to ensure the test fails fast [cite: 2026-03-04]
+
             raise Exception(f"API Error: {response.status} - {response.text()}")
 
         return response.json()
